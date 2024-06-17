@@ -1,0 +1,79 @@
+body {
+    background-color: #1c1c1c; /* Cool dark slate gray background */
+    font-family: 'Roboto', sans-serif; /* Google font */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    text-align: center;
+    color: #29a329; /* Green color for the heading */
+}
+
+.login-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #29a329; /* Matching the green color used in connected devices */
+}
+
+.login-form {
+    background-color: #000; /* Black color for the form */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    width: 400px; /* Increased width for the form */
+    max-width: 100%; /* Responsive width */
+    text-align: left;
+}
+
+.login-form label {
+    color: #fff; /* White color for form text */
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff; /* White color for input text */
+}
+
+.login-form button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #29a329; /* Sweet green color for button */
+    color: #fff; /* White color for button text */
+    font-size: 0.9em; /* Smaller font size for button */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.login-form button:hover {
+    background-color: #2eb82e;
+    transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 600px) {
+    .login-form {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .login-container h1 {
+        font-size: 1.5em;
+    }
+
+    .login-form button {
+        font-size: 0.8em;
+    }
+}

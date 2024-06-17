@@ -1,0 +1,116 @@
+body {
+    background-color: #1c1c1c; /* Cool dark slate gray background */
+    font-family: 'Roboto', sans-serif; /* Google font */
+    color: #fff; /* White color for text */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    text-align: center;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 2em;
+    color: #29a329; /* Green color for the heading */
+}
+
+header button {
+    padding: 10px 20px;
+    background-color: #29a329;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+header button:hover {
+    background-color: #2eb82e;
+    transform: scale(1.05);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #000;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+th {
+    background-color: #444;
+    color: #fff;
+}
+
+td {
+    background-color: #222;
+}
+
+.attack-btn {
+    padding: 5px 10px;
+    background-color: #29a329;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.attack-btn:hover {
+    background-color: #2eb82e;
+    transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+    header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    table, th, td {
+        display: block;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: right;
+        padding: 10px;
+    }
+
+    th::before, td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+    }
+
+    th {
+        background-color: #333;
+    }
+
+    td {
+        border-bottom: 1px solid #444;
+    }
+
+    tbody tr {
+        margin-bottom: 10px;
+    }
+}

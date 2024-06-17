@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devices Connected</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/index.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>DEVICES CONNECTED</h1>
+            <button onclick="location.reload()">Refresh</button>
+        </header>
+        <table>
+            <thead>
+                <tr>
+                    <th>BOT_UID</th>
+                    <th>BOT USERNAME</th>
+                    <th>SYSTEM VERSION</th>
+                    <th>LAST SEEN</th>
+                    <th>ATTACK</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example row, replace with dynamic content as needed -->
+                {%for bot in botlist()%}
+                <tr>
+                    <td>{{unhexlify(bot.uid).decode()}}</td>
+                    <td>{{bot.username}}</td>
+                    <td>{{bot.system_version}}</td>
+                    <td>{{strftime("%a, %b %d @ %H:%M:%S", localtime(bot.last_online))}}</td>
+                    <td><a href="{{ url_for('cp',bot_uid=bot.uid) }}"><button class="attack-btn">Attack</button></a></td>
+                </tr>
+                {%endfor%}
+                <!-- More rows can be added here -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        // JavaScript to reload the page
+        function refreshPage() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>

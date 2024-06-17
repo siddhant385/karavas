@@ -1,0 +1,128 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    background-color: #0b3d0b;
+    color: white;
+}
+
+.sidebar {
+    width: 250px;
+    position: fixed;
+    height: 100%;
+    background-color: black;
+    padding-top: 20px;
+}
+
+.sidebar h2 {
+    color: white;
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px;
+    text-align: center;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+.sidebar ul li a:hover {
+    background-color: #575757;
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+}
+
+.container {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #1aff1a;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-top: 10px;
+}
+
+input, select, button {
+    margin-top: 5px;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border: 1px solid #1aff1a;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #1aff1a;
+    color: black;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #14cc14;
+}
+
+.terminal {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+#response-container {
+    height: 300px;
+    color: #14cc14;
+    overflow-y: auto;
+    border: 1px solid #1aff1a;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: black;
+    white-space: pre-wrap; /* This will ensure newlines are preserved */
+}
+
+#command-input-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#prompt-string {
+    color: #1aff1a;
+}
+
+#command-input {
+    flex-grow: 1;
+    margin-left: 5px;
+    background-color: black;
+    color: white;
+    border: none;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+}
+#selection{
+    color: red;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+}
