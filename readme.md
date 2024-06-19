@@ -22,7 +22,7 @@
       <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square" alt="Contributing">
   </a>
 </p>
-Karavas is a sophisticated project designed to enhance user experiences in [mention the field or application if known]. This repository contains all the necessary code and resources to deploy and run the Karavas application.
+Karavas is a sophisticated project designed to enhance user experiences in Penetration Testing. This repository contains all the necessary code and resources to deploy and run the Karavas application.
 
 ## Table of Contents
 - [Getting Started](#getting-started)
