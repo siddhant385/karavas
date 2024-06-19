@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/siddhant385/karavas"><img src="/data/images/logo.png?raw=true" alt="Logo" height="360" width="280"></a>
+  <a href="https://github.com/siddhant385/karavas"><img src="/data/images/logo.png?raw=true" alt="Logo" height="360" width="360"></a>
   <br>
   KARAVAS
   <br>
@@ -18,7 +18,7 @@
   <a href="https://github.com/siddhant385/karavas/issues">
     <img src="https://img.shields.io/github/issues/siddhant385/karavas.svg?style=flat-square" alt="Issues">
   </a>
-  <a href="https://travis-ci.org/siddhant385/karavas">
+  <a href="https://github.com/siddhant385/karavas">
       <img src="https://img.shields.io/travis/siddhant385/karavas/master.svg?style=flat-square" alt="Build_Status">
   </a>
   <a href="https://github.com/siddhant385/karavas/blob/main/CONTRIBUTING.md">
