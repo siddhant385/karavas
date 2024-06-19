@@ -1,5 +1,30 @@
-# Karavas
+<h1 align="center">
+  <br>
+  <a href="https://github.com/siddhant385/karavas"><img src="/data/images/logo.png?raw=true" alt="Logo" width="280"></a>
+  <br>
+  KARAVAS
+  <br>
+</h1>
 
+<h4 align="center">An evil RAT (Remote Administration Tool) for Windows Built over Flask.</h4>
+
+<p align="center">
+  <a href="https://github.com/siddhant385/karavas/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/license-GPLv3-blue.svg?style=flat-square" alt="License">
+  </a>
+  <a href="https://github.com/siddhant385/karavas/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/python-3.10,%203.11-blue.svg?style=flat-square" alt="Python">
+  </a>
+  <a href="https://github.com/siddhant385/karavas/issues">
+    <img src="https://img.shields.io/github/issues/siddhant385/karavas.svg?style=flat-square" alt="Issues">
+  </a>
+  <a href="https://travis-ci.org/siddhant385/karavas">
+      <img src="https://img.shields.io/travis/siddhant385/karavas/master.svg?style=flat-square" alt="Build_Status">
+  </a>
+  <a href="https://github.com/siddhant385/karavas/blob/main/CONTRIBUTING.md">
+      <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square" alt="Contributing">
+  </a>
+</p>
 Karavas is a sophisticated project designed to enhance user experiences in [mention the field or application if known]. This repository contains all the necessary code and resources to deploy and run the Karavas application.
 
 ## Table of Contents
