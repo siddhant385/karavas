@@ -43,8 +43,7 @@ To get a local copy up and running, follow these simple steps.
 ### Prerequisites
 
 Ensure you have the following installed on your local machine:
-- Python (version 3.6 or higher)
-- Git
+- Python (version 3.7 or higher)
 
 ### Installation
 
