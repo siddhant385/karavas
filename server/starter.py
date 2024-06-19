@@ -2,12 +2,13 @@ from server.model import Model,Command,CommandType
 from server.handler import _RequestHandler
 from server import modules
 from server.modules.helper import ModuleABC
-from server.view.webgui import webgui
+from server.view.webgui import webgui,Builder
 
 
 model=Model()
 rhandler = _RequestHandler(model)
 web = webgui(model)
+builld = Builder()
 
 
 def login(username,password):

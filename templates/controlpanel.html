@@ -11,7 +11,7 @@
     <div class="sidebar">
         <h2>Menu</h2>
         <ul>
-            <li><a href="{{ url_for('index') }}">Builder</a></li>
+            <li><a href="{{ url_for('builder') }}">Builder</a></li>
             <li><a href="{{ url_for('index') }}">Index Page</a></li>
             <li><a href="{{ url_for('logout') }}">Logout</a></li>
         </ul>
@@ -51,7 +51,7 @@
                     <div id="microphone-options">
                         
                         <label for="record-time">{{info[0]}}</label>
-                        <input type="text" id="{{info[1]}}" name="{{info[1]}}" required>
+                        <input type="text" id="{{info[1]}}" name="{{info[1]}}" >
                     {%endfor%}
                     {% endif %}
                     <button type="submit">Submit</button>
@@ -61,7 +61,6 @@
             </form>
         </div>
         </div>
-        <label id="modres" hidden>{{modres}}</label>
         <button id="clear-responses">Clear Responses</button>
     </div>
 
@@ -95,13 +94,6 @@
                 p.textContent = response;
                 responseContainer.insertBefore(p, responseContainer.firstChild);
             });
-        }
-
-        function checkmodres() {
-            const modres = request.getElementById("modres")
-            if (modres != ""){
-                alert(modres)
-            }
         }
 
         // Clear responses when the clear button is clicked
