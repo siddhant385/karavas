@@ -30,7 +30,7 @@ Karavas is a sophisticated project designed to enhance user experiences in Penet
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
-- [Contributing](#contributing)
+- [Contributing](#this-is-a-piece-of-shit-contributing)
 - [License](#license)
 - [Contact](#contact)
 - [Credits](#credits)
@@ -69,7 +69,7 @@ Once the installation is complete, you can run the application with the followin
 - No Port Fowrding Required
 - Persistent
 
-### This is a piece of shit!!! (Contributing)
+### This is a Piece of Shit!!! (Contributing)
 Ya I know that this is not complete or it has bugs but it's up to you to download and use it or contribute to it to make it more powerful.
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 To Contribute follow the below steps
