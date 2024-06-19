@@ -33,7 +33,9 @@ Karavas is a sophisticated project designed to enhance user experiences in Penet
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
-
+- [Credits](#credits)
+- [Disclaimer](#disclaimer-)
+- [Supporters](#️supporters️)
 ## Getting Started
 
 To get a local copy up and running, follow these simple steps.
@@ -86,3 +88,15 @@ Distributed under the GPLv3 License. See LICENSE for more information.
 Siddhant - ssiddhant385@gmail.com
 
 Project Link: https://github.com/siddhant385/karavas
+
+
+### Credits
+- The Special Thanks goes to [Marten4n6](https://github.com/Marten4n6/) for his [EvilOsX](https://github.com/Marten4n6/EvilOSX) This project is a fork of it.
+
+
+### Disclaimer :
+Usage of this tool for attacking targets without prior mutual consent is illegal. It's the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program.
+
+
+### ❤️Supporters❤️
+[![Stargazers repo roster for @siddhant385/karavas](https://reporoster.com/stars/siddhant385/karavas)](https://github.com/siddhant385/karavas/stargazers)
