@@ -18,9 +18,6 @@
   <a href="https://github.com/siddhant385/karavas/issues">
     <img src="https://img.shields.io/github/issues/siddhant385/karavas.svg?style=flat-square" alt="Issues">
   </a>
-  <a href="https://github.com/siddhant385/karavas">
-      <img src="https://img.shields.io/travis/siddhant385/karavas/master.svg?style=flat-square" alt="Build_Status">
-  </a>
   <a href="https://github.com/siddhant385/karavas/blob/main/CONTRIBUTING.md">
       <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square" alt="Contributing">
   </a>
@@ -75,9 +72,9 @@ Ya I know that this is not complete or it has bugs but it's up to you to downloa
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 To Contribute follow the below steps
 1. Fork the Project
-2. Create your Feature Branch ```sh git checkout -b feature/AmazingFeature```
-3. Commit your Changes ```sh git commit -m 'Add some AmazingFeature' ```
-4. Push to the Branch ```sh git push origin feature/AmazingFeature```
+2. Create your Feature Branch ``` git checkout -b feature/AmazingFeature```
+3. Commit your Changes ``` git commit -m 'Add some AmazingFeature' ```
+4. Push to the Branch ``` git push origin feature/AmazingFeature```
 5. Open a Pull Request
 
 ### License
@@ -86,6 +83,6 @@ Distributed under the GPLv3 License. See LICENSE for more information.
 
 ### Contact
 
-Siddhant - [your email or preferred contact method]
+Siddhant - ssiddhant385@gmail.com
 
 Project Link: https://github.com/siddhant385/karavas
