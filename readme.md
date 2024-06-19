@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/siddhant385/karavas"><img src="/data/images/logo.png?raw=true" alt="Logo" width="280"></a>
+  <a href="https://github.com/siddhant385/karavas"><img src="/data/images/logo.png?raw=true" alt="Logo" height="360" width="280"></a>
   <br>
   KARAVAS
   <br>
