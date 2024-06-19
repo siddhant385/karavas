@@ -60,7 +60,7 @@ Ensure you have the following installed on your local machine:
     pip install -r requirements.txt
 
 ### Usage
-Once the installation is complete, you can run the application with the following command:
+- Once the installation is complete, you can run the application with the following command:
     ```sh
     python main.py
 
