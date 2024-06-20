@@ -22,7 +22,7 @@
       <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square" alt="Contributing">
   </a>
 </p>
-<h4 align="center"><strong>Currently this project is in BETA mode (Heave development) So mosquitos and bugs are allowed and solutions to eradicate them are also requested</strong></h4>
+<h4 align="center"><strong>Currently this project is in BETA mode (Heavy development) So mosquitos and bugs are allowed and solutions to eradicate them are also requested</strong></h4>
 Karavas is a sophisticated project designed to enhance user experiences in Penetration Testing. This repository contains all the necessary code and resources to deploy and run the Karavas application.
 
 ## Table of Contents
