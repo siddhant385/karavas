@@ -90,6 +90,7 @@ Ensure you have the following installed on your local machine:
 - A demo site is live [Click Me](https://jokesapartismyname.pythonanywhere.com/) to see
 - Note builder has been disabled for security and abuse purposes
 - It's only a demo so you won't be able to execute commands
+- Use the same credentials given above
 
 ### Features
 - Reverse Shell
