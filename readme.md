@@ -48,12 +48,16 @@ Ensure you have the following installed on your local machine:
 ### Installation
 - Installation consists of Two Parts First if you want to host to Server(No Port Forwarding Required)
   Below is the implementation:
-  1. Clone the repository to any hosting service like [PythonAnywhere]("https://www.pythonanywhere.com") or [Vercel]("https://vercel.com")
+  1. Clone the repository to any hosting service like [PythonAnywhere](https://www.pythonanywhere.com) or [Vercel](https://vercel.com)
+
   2. Do the essential steps required to host it to the respective sites as every site has different procedures for hosting
+
   3. Hurray you're good to go
-  Note - One click deploy will come soon so Stay Updated or fork this site
+
+  4. Note - One click deploy will come soon so Stay Updated or fork this site
 
 - Build Locally in your PC (Port Forwarding Required)
+
   1. Clone the repository:
     ```sh
     git clone https://github.com/siddhant385/karavas.git
@@ -73,7 +77,8 @@ Ensure you have the following installed on your local machine:
 - Once the installation is complete, you can run the application with the following command:
     ```sh
     python main.py
-
+    ```
+    <br>
     After head to [localhsot:5000](http://localhost:5000)
 - The default credentials are 
   <strong>Username:admin</strong>
