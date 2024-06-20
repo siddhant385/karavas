@@ -54,17 +54,19 @@ Ensure you have the following installed on your local machine:
   Note - One click deploy will come soon so Stay Updated or fork this site
 
 - Build Locally in your PC (Port Forwarding Required)
-1. Clone the repository:
-  ```sh
-  git clone https://github.com/siddhant385/karavas.git
-
-2. Navigate to the project directory:
+  1. Clone the repository:
     ```sh
-    cd karavas
-    
-3. Install the required Python packages:
-    ```sh
-    pip install -r requirements.txt
+    git clone https://github.com/siddhant385/karavas.git
+    ```
+  2. Navigate to the project directory:
+      ```sh
+      cd karavas
+      ```
+      
+  3. Install the required Python packages:
+      ```sh
+      pip install -r requirements.txt
+      ```
     
 
 ### Usage
