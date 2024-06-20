@@ -29,6 +29,7 @@ Karavas is a sophisticated project designed to enhance user experiences in Penet
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Demo](#demo)
 - [Features](#features)
 - [Contributing](#this-is-a-piece-of-shit-contributing)
 - [License](#license)
@@ -83,6 +84,12 @@ Ensure you have the following installed on your local machine:
 - The default credentials are 
   <strong>Username:admin</strong>
   <strong>Password:2006</strong>
+
+### Demo
+
+- A demo site is live [Click Me](https://jokesapartismyname.pythonanywhere.com/) to see
+- Note builder has been disabled for security and abuse purposes
+- It's only a demo so you won't be able to execute commands
 
 ### Features
 - Reverse Shell
