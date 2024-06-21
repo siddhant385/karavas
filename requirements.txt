@@ -1,0 +1,3 @@
+pyperclip
+flask
+requests
