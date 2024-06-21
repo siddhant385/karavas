@@ -17,51 +17,158 @@ OUTPUT_FILE_RECORDING_PATH = os.path.expandvars(FOLDER_PATH+"\\recording.wav")
 
 
 MICROPHONE_RECORD_SCRIPT = """
-# record-audio.ps1
+[OutputType([System.IO.FileInfo])]
+    Param
+    (
+        [Parameter( Position = 0, Mandatory = $True)]
+        [ValidateScript({Split-Path $_ | Test-Path})]
+        [String] $Path,
+        [Parameter( Position = 1, Mandatory = $False)]
+        [Int] $Length = 30,
+        [Parameter( Position = 2, Mandatory = $False)]
+        [String] $Alias = $(-join ((65..90) + (97..122) | Get-Random -Count 10 | % {[char]$_}))
 
-# Set the duration of the recording in seconds
-param (
-    [int]$recordDuration = 10,
-    [string]$outputFilePath = "C:\path\to\output\recording.wav"
-)
+    )
 
-# VBScript content to record audio silently
-$vbScript = @"
-Set objVoice = CreateObject("SAPI.SpVoice")
-Set objFileStream = CreateObject("SAPI.SpFileStream")
-Set objAudioFormat = CreateObject("SAPI.SpAudioFormat")
+    #Get-DelegateType from Wonttakename
+    function Local:Get-DelegateType
+    {
+        Param
+        (
+            [OutputType([Type])]
+            
+            [Parameter( Position = 0)]
+            [Type[]]
+            $Parameters = (New-Object Type[](0)),
+            
+            [Parameter( Position = 1 )]
+            [Type]
+            $ReturnType = [Void]
+        )
 
-objAudioFormat.Type = 22 ' 22 = SAFT22kHz16BitMono
+        $Domain = [AppDomain]::CurrentDomain
+        $DynAssembly = New-Object System.Reflection.AssemblyName('ReflectedDelegate')
+        $AssemblyBuilder = $Domain.DefineDynamicAssembly($DynAssembly, [System.Reflection.Emit.AssemblyBuilderAccess]::Run)
+        $ModuleBuilder = $AssemblyBuilder.DefineDynamicModule('InMemoryModule', $false)
+        $TypeBuilder = $ModuleBuilder.DefineType('MyDelegateType', 'Class, Public, Sealed, AnsiClass, AutoClass', [System.MulticastDelegate])
+        $ConstructorBuilder = $TypeBuilder.DefineConstructor('RTSpecialName, HideBySig, Public', [System.Reflection.CallingConventions]::Standard, $Parameters)
+        $ConstructorBuilder.SetImplementationFlags('Runtime, Managed')
+        $MethodBuilder = $TypeBuilder.DefineMethod('Invoke', 'Public, HideBySig, NewSlot, Virtual', $ReturnType, $Parameters)
+        $MethodBuilder.SetImplementationFlags('Runtime, Managed')
+        
+        Write-Output $TypeBuilder.CreateType()
+    }
 
-objFileStream.Format = objAudioFormat
-objFileStream.Open "$outputFilePath", 3, True
+    #Get-ProcAddress from Wonttakename
+    function local:Get-ProcAddress
+    {
+        Param
+        (
+            [OutputType([IntPtr])]
+        
+            [Parameter( Position = 0, Mandatory = $True )]
+            [String]
+            $Module,
+            
+            [Parameter( Position = 1, Mandatory = $True )]
+            [String]
+            $Procedure
+        )
 
-Set objRecognizer = CreateObject("SAPI.SpInProcRecognizer")
-Set objContext = objRecognizer.CreateRecoContext
-Set objGrammar = objContext.CreateGrammar
+        # Get a reference to System.dll in the GAC
+        $SystemAssembly = [AppDomain]::CurrentDomain.GetAssemblies() |
+            Where-Object { $_.GlobalAssemblyCache -And $_.Location.Split('\\')[-1].Equals('System.dll') }
+        $UnsafeNativeMethods = $SystemAssembly.GetType('Microsoft.Win32.UnsafeNativeMethods')
+        # Get a reference to the GetModuleHandle and GetProcAddress methods
+        $GetModuleHandle = $UnsafeNativeMethods.GetMethod('GetModuleHandle')
+        $GetProcAddress = $UnsafeNativeMethods.GetMethod('GetProcAddress')
+        # Get a handle to the module specified
+        $Kern32Handle = $GetModuleHandle.Invoke($null, @($Module))
+        $tmpPtr = New-Object IntPtr
+        $HandleRef = New-Object System.Runtime.InteropServices.HandleRef($tmpPtr, $Kern32Handle)
+        
+        # Return the address of the function
+        Write-Output $GetProcAddress.Invoke($null, @([System.Runtime.InteropServices.HandleRef]$HandleRef, $Procedure))
+    } 
 
-objGrammar.DictationSetState(1)
+    #Initialize and call LoadLibrary on our required DLL
+    $LoadLibraryAddr = Get-ProcAddress kernel32.dll LoadLibraryA
+    $LoadLibraryDelegate = Get-DelegateType @([String]) ([IntPtr])
+    $LoadLibrary = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer($LoadLibraryAddr, $LoadLibraryDelegate)
+    $HND = $null
+    $HND = $LoadLibrary.Invoke('winmm.dll')
+    if ($HND -eq $null)
+    {
+        Throw 'Failed to aquire handle to winmm.dll'
+    }
 
-Set objStream = objRecognizer.AudioInputStream
+    #Initialize the function call to count devices
+    $waveInGetNumDevsAddr = $null
+    $waveInGetNumDevsAddr = Get-ProcAddress winmm.dll waveInGetNumDevs
+    $waveInGetNumDevsDelegate = Get-DelegateType @() ([Uint32])
+    if ($waveInGetNumDevsAddr -eq $null)
+    {
+        Throw 'Failed to aquire address to WaveInGetNumDevs'
+    }
+    $waveInGetNumDevs = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer($waveInGetNumDevsAddr, $waveInGetNumDevsDelegate)
 
-WScript.Sleep $($recordDuration * 1000)
+    #Initilize the function call to record audio
+    $mciSendStringAddr = $null
+    $mciSendStringAddr = Get-ProcAddress winmm.dll mciSendStringA
+    $mciSendStringDelegate = Get-DelegateType @([String],[String],[UInt32],[IntPtr]) ([Uint32])
+    if ($mciSendStringAddr -eq $null)
+    {
+        Throw 'Failed to aquire address to mciSendStringA'
+    }
+    $mciSendString = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer($mciSendStringAddr, $mciSendStringDelegate)
 
-objFileStream.Close
-"@
+    #Initialize the ability to resolve MCI Errors
+    $mciGetErrorStringAddr = $null
+    $mciGetErrorStringAddr = Get-ProcAddress winmm.dll mciGetErrorStringA
+    $mciGetErrorStringDelegate = Get-DelegateType @([UInt32],[Text.StringBuilder],[UInt32]) ([bool])
+    if ($mciGetErrorStringAddr -eq $null)
+    {
+        Throw 'Failed to aquire address to mciGetErrorString'
+    }
+    $mciGetErrorString = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer($mciGetErrorStringAddr,$mciGetErrorStringDelegate)
 
-# Save the VBScript to a temporary file
-$tempVbsFile = [System.IO.Path]::GetTempFileName() + ".vbs"
-Set-Content -Path $tempVbsFile -Value $vbScript
+    #Get device count
+    $DeviceCount = $waveInGetNumDevs.Invoke()
 
-# Execute the VBScript
-Start-Process -FilePath "cscript.exe" -ArgumentList "//NoLogo", $tempVbsFile -NoNewWindow -Wait
+    if ($DeviceCount -gt 0)
+    {
 
-# Remove the temporary VBScript file
-Remove-Item -Path $tempVbsFile
+        #Define buffer for MCI errors. https://msdn.microsoft.com/en-us/library/windows/desktop/dd757153(v=vs.85).aspx
+        $errmsg = New-Object Text.StringBuilder 150
 
-Write-Output "Recording saved to $outputFilePath"
+        #Open an alias
+        $rtnVal = $mciSendString.Invoke("open new Type waveaudio Alias $alias",'',0,0)
+        if ($rtnVal -ne 0) {$mciGetErrorString.Invoke($rtnVal,$errmsg,150); $msg=$errmsg.ToString();Throw "MCI Error ($rtnVal): $msg"}
+        
+        #Call recording function
+        $rtnVal = $mciSendString.Invoke("record $alias", '', 0, 0)
+        if ($rtnVal -ne 0) {$mciGetErrorString.Invoke($rtnVal,$errmsg,150); $msg=$errmsg.ToString();Throw "MCI Error ($rtnVal): $msg"}
+        
+        Start-Sleep -s $Length
+
+        #save recorded audio to disk
+        $rtnVal = $mciSendString.Invoke("save $alias `"$path`"", '', 0, 0)
+        if ($rtnVal -ne 0) {$mciGetErrorString.Invoke($rtnVal,$errmsg,150); $msg=$errmsg.ToString();Throw "MCI Error ($rtnVal): $msg"}
+
+        #terminate alias
+        $rtnVal = $mciSendString.Invoke("close $alias", '', 0, 0);
+        if ($rtnVal -ne 0) {$mciGetErrorString.Invoke($rtnVal,$errmsg,150); $msg=$errmsg.ToString();Throw "MCI Error ($rtnVal): $msg"}
+
+        $OutFile = Get-ChildItem -path $path 
+        Write-Output $OutFile
+
+    }
+    else
+    {
+        Throw 'Failed to enumerate any recording devices'
+    }
+}
 """
-
 
 
 
@@ -76,13 +183,13 @@ def microphone_recorder(record_duration,outputfilepath):
     if not os.path.exists(FOLDER_PATH):
         os.makedirs(FOLDER_PATH)
     #Checks if script is present or not if not present creates the script
-    if not os.path.exists(FOLDER_PATH):
+    if not os.path.exists(MICROPHONE_RECORD_SCRIPT_PATH):
         f = open(MICROPHONE_RECORD_SCRIPT_PATH, 'w')
         f.write(MICROPHONE_RECORD_SCRIPT)
         f.close()
     #Get the screenshot
-    command = f"powershell -ep Bypass -windowstyle hidden {MICROPHONE_RECORD_SCRIPT_PATH} -recordDuration {str(record_duration)} -outputFilePath {outputfilepath}"
-    run_command(command)
+    command = f"powershell -ep Bypass {MICROPHONE_RECORD_SCRIPT_PATH} -Length {str(record_duration)} -Path {outputfilepath}"
+    print(run_command(command))
     if os.path.exists(os.path.expandvars(outputfilepath)):
         return True
     else:
@@ -99,5 +206,8 @@ def run(options):
         print(raw_data)
         run_command(f"rm -rf  + {OUTPUT_FILE_RECORDING_PATH}")
     else:
-        print("No Screenshot file found")
+        print("No Recorded File Found")
     
+
+if __name__ == '__main__':
+    print(microphone_recorder(30,OUTPUT_FILE_RECORDING_PATH))

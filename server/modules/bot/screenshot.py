@@ -20,7 +20,7 @@ SCREENSHOT_SCRIPT_PATH = FOLDER_PATH + "\\save-screenshot.ps1"
 #------------------
 #This script is take from https://github.com/fleschutz/PowerShell
 # Author of the script is Markus Fleschutz
-SCREENSHOT_SCRIPT = """
+SCREENSHOT_SCRIPT = r"""
 <#
 .SYNOPSIS
 	Saves a single screenshot
@@ -30,7 +30,7 @@ SCREENSHOT_SCRIPT = """
 	Specifies the target folder (the user's screenshots folder by default)
 .EXAMPLE
 	PS> ./save-screenshot
- 	✔️ screenshot saved to C:\Users\Markus\Pictures\Screenshots\2021-10-10T14-33-22.png
+ 	✔️ screenshot saved to C:\\Users\\Markus\\Pictures\\Screenshots\2021-10-10T14-33-22.png
 .LINK
 	https://github.com/fleschutz/PowerShell
 .NOTES
@@ -47,7 +47,7 @@ function GetScreenshotsFolder {
         } else {
                 $Path = [Environment]::GetFolderPath('MyPictures')
                 if (-not(Test-Path "$Path" -pathType container)) { throw "Pictures folder at $Path doesn't exist (yet)" }
-                if (Test-Path "$Path\Screenshots" -pathType container) { $Path = "$Path\Screenshots" }
+                if (Test-Path "$Path\\Screenshots" -pathType container) { $Path = "$Path\\Screenshots" }
         }
         return $Path
 }
@@ -64,21 +64,19 @@ function TakeScreenshot { param([string]$FilePath)
 }
 
 try {
-	if ("$TargetFolder" -eq "") { $TargetFolder = {folderpath} }
+	if ("$TargetFolder" -eq "") { $TargetFolder = GetScreenshotsFolder }
 	$Time = (Get-Date)
 	$Filename = "screenshot.png"
 	$FilePath = (Join-Path $TargetFolder $Filename)
 	TakeScreenshot $FilePath
 
-	"✔️ screenshot saved to $FilePath"
+	"screenshot saved to $FilePath"
 	exit 0 # success
 } catch {
-	"⚠️ Error in line $($_.InvocationInfo.ScriptLineNumber): $($Error[0])"
+	"Error in line $($_.InvocationInfo.ScriptLineNumber): $($Error[0])"
 	exit 1
 }
-
-""".format(folderpath=FOLDER_PATH)
-
+"""
 
 
 def run_command(command):
@@ -92,11 +90,11 @@ def screenshottaker():
         os.makedirs(os.path.expandvars(FOLDER_PATH))
     #Checks if script is present or not if not present creates the script
     if not os.path.exists(os.path.expandvars(SCREENSHOT_SCRIPT_PATH)):
-        f = open(os.path.expandvars(SCREENSHOT_SCRIPT_PATH), 'w')
+        f = open(os.path.expandvars(SCREENSHOT_SCRIPT_PATH), 'w',encoding="utf-8")
         f.write(SCREENSHOT_SCRIPT)
         f.close()
     #Get the screenshot
-    command = f"powershell -ep Bypass -windowstyle hidden {os.path.expandvars(SCREENSHOT_SCRIPT_PATH)} save-screenshot"
+    command = f"powershell -ep Bypass {os.path.expandvars(SCREENSHOT_SCRIPT_PATH)} {os.path.expandvars(FOLDER_PATH)}"
     run_command(command)
     if os.path.exists(os.path.expandvars(FOLDER_PATH+"\\screenshot.png")):
         return True
@@ -117,3 +115,7 @@ def run(options):
         run_command("rm -rf " + FOLDER_PATH+"\\screenshot.png")
     else:
         print("No Screenshot file found")
+
+
+if __name__ == '__main__':
+	print(screenshottaker())

@@ -5,7 +5,7 @@ import os.path
 #--------------------------------------
 #Variables for saving file
 FOLDER_NAME = "SYSINFOTEMP648393"
-FOLDER_PATH = os.getenv("temp") +"\\{FOLDER_NAME}"
+FOLDER_PATH = os.getenv("temp") +f"\\{FOLDER_NAME}"
 SYSTEM_INFO_SCRIPT_PATH = FOLDER_PATH+ "\\list-system-info.ps1"
 #--------------------------------------
 #This script is taken directly from https://github.com/fleschutz/PowerShell
@@ -136,9 +136,21 @@ def run(options):
         os.makedirs(FOLDER_PATH)
     #Checks if file exists or not 
     if not os.path.exists(os.path.expandvars(SYSTEM_INFO_SCRIPT_PATH)):
-        f = open(SYSTEM_INFO_SCRIPT_PATH,'W')
+        f = open(SYSTEM_INFO_SCRIPT_PATH,'w')
         f.write(SYSTEM_INFO_SCRIPT)
         f.close()
     #Get the system info
     command = f"powershell.exe -ep Bypass -windowstyle hidden {os.path.expandvars(SYSTEM_INFO_SCRIPT_PATH)}"
+    print(run_command(command))
+
+if __name__ == '__main__':
+    if not os.path.exists(os.path.expandvars(FOLDER_PATH)):
+        os.makedirs(FOLDER_PATH)
+    #Checks if file exists or not 
+    if not os.path.exists(os.path.expandvars(SYSTEM_INFO_SCRIPT_PATH)):
+        f = open(SYSTEM_INFO_SCRIPT_PATH,'w')
+        f.write(SYSTEM_INFO_SCRIPT)
+        f.close()
+    #Get the system info
+    command = f"powershell.exe -ep Bypass {os.path.expandvars(SYSTEM_INFO_SCRIPT_PATH)}"
     print(run_command(command))
