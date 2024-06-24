@@ -59,13 +59,15 @@ Ensure you have the following installed on your local machine:
 ### Installation
 - Installation consists of Two Parts First if you want to host to Server(No Port Forwarding Required)
   Below is the implementation:
-  1. Clone the repository to any hosting service like [PythonAnywhere](https://www.pythonanywhere.com) or [Vercel](https://vercel.com)
+  - Fist method just click [![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/siddhant385/karavas)
+  - Second Method
+      1. Clone the repository to any hosting service like [PythonAnywhere](https://www.pythonanywhere.com) or [Vercel](https://vercel.com)
 
-  2. Do the essential steps required to host it to the respective sites as every site has different procedures for hosting
+      2. Do the essential steps required to host it to the respective sites as every site has different procedures for hosting
 
-  3. Hurray you're good to go
+      3. Hurray you're good to go
 
-  4. Note - One click deploy will come soon so Stay Updated or fork this site
+      4. Note - One click deploy will come soon so Stay Updated or fork this site
 
 - Build Locally in your PC (Port Forwarding Required)
 
