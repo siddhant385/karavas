@@ -23,7 +23,9 @@
   </a>
 </p>
 <h4 align="center"><strong>Currently this project is in BETA mode (Heavy development) So mosquitos and bugs are allowed and solutions to eradicate them are also requested</strong></h4>
-Karavas is a sophisticated project designed to enhance user experiences in Penetration Testing. This repository contains all the necessary code and resources to deploy and run the Karavas application.
+Karavas is a Remote Administration Tool which is created for a simple yet powerful remote administration.
+It was created as a hosting site which can be easily deployed to any python flask hosting service as command and control
+
 
 ## Table of Contents
 - [Getting Started](#getting-started)
@@ -32,6 +34,7 @@ Karavas is a sophisticated project designed to enhance user experiences in Penet
 - [Usage](#usage)
 - [Demo](#demo)
 - [Features](#features)
+- [Future]()
 - [Contributing](#this-is-a-piece-of-shit-contributing)
 - [License](#license)
 - [Contact](#contact)
@@ -39,8 +42,14 @@ Karavas is a sophisticated project designed to enhance user experiences in Penet
 - [Disclaimer](#disclaimer-)
 - [Supporters](#️supporters️)
 ## Getting Started
+There are already many tools on github so Why have I created this one There are following reasons for that
 
-To get a local copy up and running, follow these simple steps.
+- First I wanted to create this project for learning python and OOPs(Object Oriented Programming)
+- I loved the tool EvilOsX and wanted an implementation of it in windows although like mac Windows doesn't come inbuilt with python.
+- I liked the concept of **Run Once in client and forget** in EvilOsX, like only you have to run a client and forget about the modules they will load from server and you can update module from server
+- Many Great RAT tools doesn't come with **Port Forwarding** we have to either use ngrok or something else to port forward, but if you run this tool from hosting site no porforwarding is needed.
+- One more thing This tool only needs a webbrower to run if you host it fromm a hosting site and no space is utilised in your device
+
 
 ### Prerequisites
 
@@ -97,6 +106,13 @@ Ensure you have the following installed on your local machine:
 - Reverse Shell
 - No Port Fowrding Required
 - Persistent
+
+### Future
+Future of this project depends on you So if You like please star and support me
+Although in Future I will enchance this tool with following features and in order:
+- Run in windows using exe instead to python to end python dependency in windows (will use pyinstaller)
+- Create **different and encrypted payload** for different pc as EvilOsx
+- Create **external library independent** modules for windows
 
 ### This is a Piece of Shit!!! (Contributing)
 Ya I know that this is not complete or it has bugs but it's up to you to download and use it or contribute to it to make it more powerful.
