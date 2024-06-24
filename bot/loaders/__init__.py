@@ -3,12 +3,24 @@
 __author__ = "Marten4n6"
 __license__ = "GPLv3"
 
-import imp
+# import imp
+import importlib.util
+import importlib.machinery
 from os import path, listdir
 from zlib import compress
 
 _loader_cache = {}
 
+
+def load_source(modname, filename):
+    loader = importlib.machinery.SourceFileLoader(modname, filename)
+    spec = importlib.util.spec_from_file_location(modname, filename, loader=loader)
+    module = importlib.util.module_from_spec(spec)
+    # The module is always executed and not cached in sys.modules.
+    # Uncomment the following line to cache the module.
+    # sys.modules[module.__name__] = module
+    loader.exec_module(module)
+    return module
 
 def _load_loader(loader_name):
     """Loads the loader and adds it to the cache.
@@ -17,11 +29,12 @@ def _load_loader(loader_name):
     """
     # Going to use imp over importlib until python decides to remove it.
     module_path = path.realpath(path.join(path.dirname(__file__), loader_name, "loader.py"))
-    module = imp.load_source(loader_name, module_path)
+    module = load_source(loader_name, module_path)
 
     _loader_cache[loader_name] = module.Loader()
 
     return _loader_cache[loader_name]
+
 
 
 def get_names():

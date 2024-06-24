@@ -5,7 +5,7 @@ from time import time
 from urllib.parse import unquote_plus
 import shutil
 import json
-import pyperclip as py
+#import pyperclip as py
 #External Imports
 from server.model import RequestType,Bot,PayloadFactory
 from server import modules
