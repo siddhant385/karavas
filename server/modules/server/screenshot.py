@@ -52,7 +52,7 @@ class Module(ModuleABC):
             url = r.text.strip()
             if r.status_code == 200:
                 res = ""
-                res = f"Your Image Url of Screenshot:~ {str(url)}\n"
+                res = f"\033[31mYour Image Url of Screenshot:~\033[0m \033[34m{str(url)}\033[0m\n" #\033[31m \033[0m color incodes for terminal
                 res += "\n\n"
                 res += "----------"*20+"\n\n\n\n"
                 return res

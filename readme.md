@@ -119,7 +119,9 @@ Siddhant - ssiddhant385@gmail.com
 Project Link: https://github.com/siddhant385/karavas
 
 
-### Credits
+### Credits and Mentions
+- This Tool Uses a Gorgeous API Named [The Null Pointer](https://0x0.st/)
+- This Tool also Uses a javascript library [Ansi Up](https://github.com/drudru/ansi_up) for colored terminal in output
 - The Special Thanks goes to [Marten4n6](https://github.com/Marten4n6/) for his [EvilOsX](https://github.com/Marten4n6/EvilOSX) This project is a fork of it.
 
 

@@ -6,6 +6,17 @@
     <title>Control Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/controlpanel.css') }}">
+    <style>
+        .terminal {
+            background-color: #000;
+            color: #fff;
+            padding: 10px;
+            font-family: monospace;
+        }
+        .terminal span {
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -65,6 +76,65 @@
     </div>
 
     <script>
+        class AnsiUp {
+            constructor() {
+                this.fg = this.bg = null;
+                this.bright = 0;
+                this.ansi_colors = [
+                    [[0, 0, 0], [128, 0, 0], [0, 128, 0], [128, 128, 0], [0, 0, 128], [128, 0, 128], [0, 128, 128], [192, 192, 192]],
+                    [[128, 128, 128], [255, 0, 0], [0, 255, 0], [255, 255, 0], [0, 0, 255], [255, 0, 255], [0, 255, 255], [255, 255, 255]]
+                ];
+                this.reset();
+            }
+    
+            reset() {
+                this.fg = this.bg = null;
+                this.bright = 0;
+            }
+    
+            escape_for_html(txt) {
+                const urlPattern = /(https?:\/\/[^\s]+)/g;
+                return txt.replace(/[&<>]/gm, function (str) {
+                    if (str == "&") return "&amp;";
+                    if (str == "<") return "&lt;";
+                    if (str == ">") return "&gt;";
+                }).replace(urlPattern, '<a href="$1" target="_blank">$1</a>');
+            }
+    
+            set_color(index) {
+                this.fg = this.ansi_colors[this.bright][index];
+            }
+    
+            set_bg_color(index) {
+                this.bg = this.ansi_colors[0][index];
+            }
+    
+            to_html(txt) {
+                var self = this;
+                txt = this.escape_for_html(txt);
+                txt = txt.replace(/\x1B\[(\d+)(;\d+)*m/g, function (_, m1, m2) {
+                    var sgrs = arguments[0].slice(2, -1).split(';');
+                    for (var i = 0; i < sgrs.length; i++) {
+                        var sgr = parseInt(sgrs[i]);
+                        if (sgr == 0) self.reset();
+                        else if (sgr == 1) self.bright = 1;
+                        else if (sgr >= 30 && sgr <= 37) self.set_color(sgr - 30);
+                        else if (sgr >= 40 && sgr <= 47) self.set_bg_color(sgr - 40);
+                    }
+                    var styles = [];
+                    if (self.fg) styles.push("color:rgb(" + self.fg.join(",") + ")");
+                    if (self.bg) styles.push("background-color:rgb(" + self.bg.join(",") + ")");
+                    return "</span><span style='" + styles.join(";") + "'>";
+                });
+                return "<span>" + txt + "</span>";
+            }
+        }
+    
+        function ansiToHtml(ansiText) {
+            const ansiUp = new AnsiUp();
+            return ansiUp.to_html(ansiText);
+        }
+    
         function fetchResponses() {
             fetch('/get_responses')
                 .then(response => response.json())
@@ -75,7 +145,7 @@
                         data.forEach(response => {
                             if (response) {
                                 const p = document.createElement('p');
-                                p.textContent = response;
+                                p.innerHTML = ansiToHtml(response);
                                 responseContainer.insertBefore(p, responseContainer.firstChild);
                                 currentResponses.unshift(response);
                             }
@@ -85,28 +155,29 @@
                 })
                 .catch(error => console.error('Error fetching responses:', error));
         }
-
+    
         function loadStoredResponses() {
             const storedResponses = JSON.parse(localStorage.getItem('responses')) || [];
             const responseContainer = document.getElementById('response-container');
             storedResponses.forEach(response => {
                 const p = document.createElement('p');
-                p.textContent = response;
+                p.innerHTML = ansiToHtml(response);
                 responseContainer.insertBefore(p, responseContainer.firstChild);
             });
         }
-
+    
         // Clear responses when the clear button is clicked
         document.getElementById('clear-responses').addEventListener('click', () => {
             localStorage.removeItem('responses');
             document.getElementById('response-container').innerHTML = '';
         });
-
+    
         // Load stored responses when the page loads
         window.onload = loadStoredResponses;
-
+    
         // Fetch responses every 2 seconds
         setInterval(fetchResponses, 2000);
     </script>
+    
 </body>
 </html>
