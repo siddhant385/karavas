@@ -34,7 +34,7 @@ It was created as a hosting site which can be easily deployed to any python flas
 - [Usage](#usage)
 - [Demo](#demo)
 - [Features](#features)
-- [Future]()
+- [Future](#future)
 - [Contributing](#this-is-a-piece-of-shit-contributing)
 - [License](#license)
 - [Contact](#contact)
