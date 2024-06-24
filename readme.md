@@ -89,7 +89,7 @@ Ensure you have the following installed on your local machine:
 ### Usage
 - Once the installation is complete, you can run the application with the following command:
     ```sh
-    python main.py
+    python app.py
     ```
     <br>
     After head to [localhsot:5000](http://localhost:5000)
