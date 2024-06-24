@@ -17,6 +17,12 @@ app.secret_key = "hello"
 # The route() function of the Flask class is a decorator, 
 # which tells the application which URL should call 
 # the associated function.
+@app.before_request
+def log_request_info():
+    app.logger.debug("Headers: %s", request.headers)
+    app.logger.debug("Body: %s", request.get_data())
+
+
 
 @app.route('/',methods=['GET', 'POST'])
 # ‘/’ URL is bound with hello_world() function.
