@@ -3,7 +3,9 @@
 __author__ = "Marten4n6"
 __license__ = "GPLv3"
 
-import imp
+#import imp
+import importlib.util
+import importlib.machinery
 import json
 import random
 import string
@@ -27,6 +29,17 @@ def get_names():
     return launcher_names
 
 
+def load_source(modname, filename):
+    loader = importlib.machinery.SourceFileLoader(modname, filename)
+    spec = importlib.util.spec_from_file_location(modname, filename, loader=loader)
+    module = importlib.util.module_from_spec(spec)
+    # The module is always executed and not cached in sys.modules.
+    # Uncomment the following line to cache the module.
+    # sys.modules[module.__name__] = module
+    loader.exec_module(module)
+    return module
+
+
 def _load_module(module_name):
     """Loads the module and adds it to the cache.
 
@@ -34,7 +47,7 @@ def _load_module(module_name):
     """
     # Going to use imp over importlib until python decides to remove it.
     module_path = path.realpath(path.join(path.dirname(__file__), module_name + ".py"))
-    module = imp.load_source(module_name, module_path)
+    module = load_source(module_name, module_path)
 
     _module_cache[module_name] = module
 
