@@ -126,6 +126,10 @@
                     if (self.bg) styles.push("background-color:rgb(" + self.bg.join(",") + ")");
                     return "</span><span style='" + styles.join(";") + "'>";
                 });
+                
+                // Clean up improperly formatted URLs
+                txt = txt.replace(/<\/?span[^>]*>(https?:\/\/[^\s<]+)<\/?span[^>]*>/g, '$1');
+    
                 return "<span>" + txt + "</span>";
             }
         }
